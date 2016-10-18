@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>react - 1</title>
+	<script src="https://unpkg.com/react@15.3.2/dist/react.js"></script>
+	<script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
+	<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/babel">
+		var App = React.createClass({
+			getInitialState: function(){
+				return {count: 0};
+			},
+			buy: function(){
+				this.setState({count: this.state.count + 1});
+				this.props.handleTotal(this.props.price);
+			},
+			show: function(){
+				alert(this.props.name);
+			},
+			render: function(){
+				return (
+					<div>
+						<p>{this.props.name} - ${this.props.price}</p>
+						<button onClick={this.buy}>구매</button>
+						<button onClick={this.show}>보기</button>
+						<h3>수량 : {this.state.count} 개</h3>
+						<hr/>
+					</div>
+				);
+			}
+		});
+
+		var Total = React.createClass({
+			render: function(){
+				return (<div><h3>Total: ${this.props.total}</h3></div>);
+			}
+		});
+
+		var Phones = React.createClass({
+			getInitialState: function(){
+				return {
+					total: 0,
+					phonelist: [
+						{name: "Android",price: 199},
+						{name: "Apple",price: 220},
+						{name: "Nokia",price: 80},
+						{name: "WindowsPhone",price: 50}
+					]
+				};
+			},
+			getTotal: function(price){
+				this.setState({total: this.state.total + price});
+			},
+			render: function(){
+				var temp = this;
+				var products = this.state.phonelist.map(function(product,i){
+					return (<App name={product.name} price={product.price} key={i} handleTotal={temp.getTotal}/>);
+				});
+				return (
+					<div>
+						{products}
+						<Total total={this.state.total}/>
+					</div>
+				);
+			}
+		});
+
+		ReactDOM.render(<Phones/>,document.getElementById("root"));		
+	</script>
+</body>
+</html>
