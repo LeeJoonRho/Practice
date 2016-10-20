@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>drag &amp; drop</title>
+<link rel="http://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style>
+	.card {
+		height : 100px;
+		border : 1px solid #888;
+		text-align: center;
+		line-height: 100px;
+	}
+	.card-name {
+		background-color: white;
+	}
+</style>
+
+<script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+<script>
+	$(document).ready(function() {
+		var count=0;
+		var nRandom = [10];
+		var cRandom = [10];
+		var i;
+		var j;
+
+		var colors = ["red","green","blue","yellow","orange","pink","black","skyblue"];
+
+		for(i=0; i<8; i++) {
+			nRandom[i] = Math.floor(Math.random() * 8);
+			cRandom[i] = Math.floor(Math.random() * 8);
+			for(j=0; j<i; j++) {
+				if(nRandom[j]==nRandom[i]) {
+					i--;
+					break;
+				}
+				if(cRandom[j]==cRandom[i]) {
+					i--;
+					break;
+				}
+			}
+		}
+
+	    for(var i=0;i<colors.length;i++) {
+	        $(".card-names").append("<div class='card card-name col-sm-3' data-color='" + colors[nRandom[i]] + "'>" + colors[nRandom[i]].toUpperCase() + "</div>");  
+	        $(".card-colors").append("<div class='card card-color col-sm-3' data-color='" + colors[cRandom[i]] + "'></div>");
+	    }      
+	    $(".card-color").each(function() {
+	        var bgcolor = $(this).attr("data-color");
+	        $(this).css({"background-color":bgcolor});
+	    });
+			
+		$(".card-color").each(function() {
+			var bgcolor = $(this).attr("data-color");
+			$(this).css({"background-color":bgcolor});
+		});
+
+		$(".card-name").draggable({
+			cursor: "move",
+			revert: true,
+			start: function(event, ui) {
+				$(".card-name").css({"z-index" : 1});
+				$(this).css({"z-index" : 999});
+			}
+		});
+
+		$(".card-color").droppable({
+			drop: function(event, ui) {
+				var offset = $(this).offset();
+				var tColor=$(this).attr("data-color");
+				var oColor=$(ui.draggable).attr("data-color");
+
+				if(tColor===oColor) {
+					$(ui.draggable).draggable("option","revert", false);
+					$(ui.draggable).css({"position" : "absolute"});
+					$(ui.draggable).css({"top" : offset.top});
+					$(ui.draggable).css({"left" : offset.left});
+					$(ui.draggable).draggable("option","disabled", true);
+					count=count+1;
+
+					if(count==8) {
+						var restart=confirm("다시 하시겠습니까?");
+						if(restart==true) {
+							location.reload();
+						}
+					}
+				}
+			}
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="card-names col-sm-6">
+			</div>
+			<div class="card-colors col-sm-6">
+			</div>
+		</div>
+	</div>
+</body>
+</html>
