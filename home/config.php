@@ -19,3 +19,10 @@ if( isset($_SESSION['username']) )
 	$member['username'] = $_SESSION['username'];
 if( isset($_SESSION['userlogin']) )
 	$member['userlogin'] = $_SESSION['userlogin'];
+
+try {
+	$db = new PDO("mysql:host=localhost; dbname=home; charset=utf8", "root", "");
+}
+catch(PDOException $e) {
+	header('Location:/home/app/templates/404.php');
+}

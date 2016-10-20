@@ -19,6 +19,7 @@
             }
         </style>
         <link rel="stylesheet" href="<?php echo CSS;?>bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css">
         <link rel="stylesheet" href="<?php echo CSS;?>main.css">
 
         <script src="<?php echo JS;?>vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
@@ -49,6 +50,7 @@
               <input type="password" name="pass"placeholder="Password" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
+            <a href="#" class="sign-up btn btn-primary">Sign up</a>
           </form>
       <?php else:?>
         <div class="logout navbar-right">
@@ -56,6 +58,7 @@
                 <?php echo $member['username'];?>님 반갑습니다
             </span>
             <a href="<?php echo SITE_ROOT;?>/app/pages/logout.php" class="btn btn-warning">로그아웃</a>
+            <a href="#" class="info-su btn btn-primary">정보수정</a>
         </div>
       <?php endif?>
         </div><!--/.navbar-collapse -->

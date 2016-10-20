@@ -1,3 +1,9 @@
 .logout span {
 	color: #fff;
 }
+.signuppop {
+	display: none;
+}
+.infopop {
+	display: none;
+}
