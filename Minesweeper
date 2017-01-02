@@ -1,9 +1,10 @@
-package ss;
+package Minesweeper;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,13 +14,17 @@ public class Minesweeper implements ActionListener {
 	Random rnd=new Random();
 	
 	JFrame frm;
+	JFrame ffrm;
 	JButton btn[];
 	JLabel label[];
+	JLabel flabel;
 	int rnMine[];
 	int Mine[];
 	int MineCount[];
 	int Mines;
-	
+	int Minecheck=0;
+	int width;
+	int height;
 	
 	public Minesweeper() {
 		MineSet();
@@ -29,51 +34,40 @@ public class Minesweeper implements ActionListener {
 	
 	void createfrm() {
 		frm=new JFrame();
-		frm.setBounds(100,100,416,438);
+		frm.setBounds(100,100,406,428);
 		frm.setLayout(null);
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frm.setResizable(false);
 		frm.setVisible(true);
 	}
 	
 	void createbtn() {
-		 btn = new JButton[16];
-		 label = new JLabel[16];
+		 btn = new JButton[Mines*Mines];
+		 label = new JLabel[Mines*Mines];
 		 
-		 for (int i = 0; i < 16; i++) {
+		 for (int i = 0; i < Mines*Mines; i++) {
 				frm.add(btn[i] = new JButton()); // 프레임안에 버튼을 넣음
 				frm.add(label[i] = new JLabel(""+MineCount[i], JLabel.CENTER));
 				
 				btn[i].addActionListener(this); // 버튼에 이벤트를 사용하겠다
-				btn[i].setSize(100, 100);
-				label[i].setSize(100, 100);
-				if (i < 4) {
-					btn[i].setLocation(0 + 100 * (i), 0);
-					label[i].setLocation(0 + 100 * (i), 0);
-				}
-				else if (i < 8) {
-					btn[i].setLocation(0 + 100 * (i - 4), 100);
-					label[i].setLocation(0 + 100 * (i - 4), 100);
-				}
-				else if (i < 12) {
-					btn[i].setLocation(0 + 100 * (i - 8), 200);
-					label[i].setLocation(0 + 100 * (i - 8), 200);
-				}
-				else if (i < 16) {
-					btn[i].setLocation(0 + 100 * (i - 12), 300);
-					label[i].setLocation(0 + 100 * (i - 12), 300);
-				}
+				btn[i].setSize(width, height);
+				label[i].setSize(width, height);
+				btn[i].setLocation((i%Mines)*width, (i/Mines)*height);
+				label[i].setLocation((i%Mines)*width, (i/Mines)*height);
 				label[i].setVisible(false);
 			}
 	}
 	
 	void MineSet() {
-		Mines=4;	//가로 세로 크기, 지뢰 개수
-		rnMine = new int[Mines];
-		 Mine = new int[16];
-		 MineCount = new int[16];
+		Mines=10;	//가로 세로 크기
+		rnMine = new int[Mines*Mines/5];	//지뢰 개수
+		 Mine = new int[Mines*Mines];
+		 MineCount = new int[Mines*Mines];
+		 width=400/Mines;
+		 height=400/Mines;
 		 
 		 for(int i = 0; i<rnMine.length; i++) {	//지뢰 랜덤으로 배치
-			 int ran=rnd.nextInt(16);
+			 int ran=rnd.nextInt(Mines*Mines);
 			 rnMine[i]=ran;
 			 for(int j=0; j<i; j++) {
 				 if(rnMine[i]==rnMine[j]) {
@@ -87,34 +81,46 @@ public class Minesweeper implements ActionListener {
 			 Mine[rnMine[i]]=1;
 		 }
 		 
-		 for(int i=0; i<MineCount.length; i++) {	//주변 마인 개수 표시. for문으로 변경가능. 나중에 Mine변수를 사용해서 숫자 부분 변경(4x4크기만 아니라 다른 크기도 할 수 있게 바꾸기)
-			 if(i%4==0&&i/4==0) {
-				 MineCount[i]=Mine[i+1]+Mine[i+4]+Mine[i+5];
+		 for(int i=0; i<MineCount.length; i++) {	//주변 마인 개수 표시. for문으로 변경가능
+			 if(i%Mines==0&&i/Mines==0) {
+				 MineCount[i]=Mine[i+1]+Mine[i+Mines]+Mine[i+(Mines+1)];
 			 }
-			 else if(i%4==0&&i/4==3) {
-				 MineCount[i]=Mine[i+1]+Mine[i-4]+Mine[i-3];
+			 else if(i%Mines==0&&i/Mines==(Mines-1)) {
+				 MineCount[i]=Mine[i+1]+Mine[i-Mines]+Mine[i-(Mines-1)];
 			 }
-			 else if(i%4==3&&i/4==0) {
-				 MineCount[i]=Mine[i-1]+Mine[i+4]+Mine[i+3];
+			 else if(i%Mines==(Mines-1)&&i/Mines==0) {
+				 MineCount[i]=Mine[i-1]+Mine[i+Mines]+Mine[i+(Mines-1)];
 			 }
-			 else if(i%4==3&&i/4==3) {
-				 MineCount[i]=Mine[i-1]+Mine[i-4]+Mine[i-5];
+			 else if(i%Mines==(Mines-1)&&i/Mines==(Mines-1)) {
+				 MineCount[i]=Mine[i-1]+Mine[i-Mines]+Mine[i-(Mines+1)];
 			 }
-			 else if(i/4==0) {
-				 MineCount[i]=Mine[i+1]+Mine[i-1]+Mine[i+3]+Mine[i+4]+Mine[i+5];
+			 else if(i/Mines==0) {
+				 MineCount[i]=Mine[i+1]+Mine[i-1]+Mine[i+(Mines-1)]+Mine[i+Mines]+Mine[i+(Mines+1)];
 			 }
-			 else if(i/4==3) {
-				 MineCount[i]=Mine[i+1]+Mine[i-1]+Mine[i-3]+Mine[i-4]+Mine[i-5];
+			 else if(i/Mines==(Mines-1)) {
+				 MineCount[i]=Mine[i+1]+Mine[i-1]+Mine[i-(Mines-1)]+Mine[i-Mines]+Mine[i-(Mines+1)];
 			 }
-			 else if(i%4==0) {
-				 MineCount[i]=Mine[i+1]+Mine[i+4]+Mine[i-3]+Mine[i-4]+Mine[i+5];
+			 else if(i%Mines==0) {
+				 MineCount[i]=Mine[i+1]+Mine[i+Mines]+Mine[i-(Mines-1)]+Mine[i-Mines]+Mine[i+(Mines+1)];
 			 }
-			 else if(i%4==3) {
-				 MineCount[i]=Mine[i-1]+Mine[i-4]+Mine[i+3]+Mine[i+4]+Mine[i-5];
+			 else if(i%Mines==(Mines-1)) {
+				 MineCount[i]=Mine[i-1]+Mine[i-Mines]+Mine[i+(Mines-1)]+Mine[i+Mines]+Mine[i-(Mines+1)];
 			 }
 			 else
-				 MineCount[i]=Mine[i-1]+Mine[i+1]+Mine[i-4]+Mine[i+4]+Mine[i-5]+Mine[i+5]+Mine[i-3]+Mine[i+3];
+				 MineCount[i]=Mine[i-1]+Mine[i+1]+Mine[i-Mines]+Mine[i+Mines]+Mine[i-(Mines+1)]+Mine[i+(Mines+1)]+Mine[i-(Mines-1)]+Mine[i+(Mines-1)];
 		 }
+	}
+	
+	void finishfrm() {
+		ffrm=new JFrame();
+		ffrm.setBounds(100,100,640,388);
+		ffrm.setLayout(null);
+		ffrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ffrm.setResizable(false);
+		ffrm.setVisible(true);
+		
+		ffrm.add(flabel = new JLabel(new ImageIcon("images/harukkaka2.gif")));
+		flabel.setSize(640,360);
 	}
 	
 	public static void main(String[] args) {
@@ -124,14 +130,20 @@ public class Minesweeper implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < Mines*Mines; i++) {
 			if (e.getSource().equals(btn[i])) {
 				if(Mine[i]==1) {
 					frm.dispose();
 				}
-				else {
+				else {	
 					btn[i].setVisible(false);
 					label[i].setVisible(true);
+					Minecheck++;
+				}
+				
+				if(Minecheck==(Mines*Mines)-(Mines*Mines)/5) {
+					frm.dispose();
+					finishfrm();
 				}
 			}
 		}
