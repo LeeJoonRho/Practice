@@ -25,14 +25,25 @@ public class Minesweeper implements ActionListener {
 	int Minecheck=0;
 	int width;
 	int height;
+	int FirstClick=1;
+	int SaveFClick;
 	
 	public Minesweeper() {
-		MineSet();
-		createfrm();
-		createbtn();
+		SetValue();
+		Createfrm();
+		Createbtn();
 	}
 	
-	void createfrm() {
+	void SetValue() {	//변수 값 설정
+		Mines=6;	//가로 세로 크기
+		rnMine = new int[Mines*Mines/5];	//지뢰 개수
+		 Mine = new int[Mines*Mines];
+		 MineCount = new int[Mines*Mines];
+		 width=400/Mines;
+		 height=400/Mines;
+	}
+	
+	void Createfrm() {
 		frm=new JFrame();
 		frm.setBounds(100,100,406,428);
 		frm.setLayout(null);
@@ -41,36 +52,41 @@ public class Minesweeper implements ActionListener {
 		frm.setVisible(true);
 	}
 	
-	void createbtn() {
+	void Createbtn() {
 		 btn = new JButton[Mines*Mines];
-		 label = new JLabel[Mines*Mines];
 		 
 		 for (int i = 0; i < Mines*Mines; i++) {
 				frm.add(btn[i] = new JButton()); // 프레임안에 버튼을 넣음
-				frm.add(label[i] = new JLabel(""+MineCount[i], JLabel.CENTER));
 				
 				btn[i].addActionListener(this); // 버튼에 이벤트를 사용하겠다
 				btn[i].setSize(width, height);
-				label[i].setSize(width, height);
 				btn[i].setLocation((i%Mines)*width, (i/Mines)*height);
-				label[i].setLocation((i%Mines)*width, (i/Mines)*height);
-				label[i].setVisible(false);
 			}
 	}
 	
+	void Createlabel() {
+		label = new JLabel[Mines*Mines];
+		
+		for (int i = 0; i < Mines*Mines; i++) {
+			frm.add(label[i] = new JLabel(""+MineCount[i], JLabel.CENTER));
+			label[i].setSize(width, height);
+			label[i].setLocation((i%Mines)*width, (i/Mines)*height);
+			label[i].setVisible(false);
+		}
+	}
+	
 	void MineSet() {
-		Mines=10;	//가로 세로 크기
-		rnMine = new int[Mines*Mines/5];	//지뢰 개수
-		 Mine = new int[Mines*Mines];
-		 MineCount = new int[Mines*Mines];
-		 width=400/Mines;
-		 height=400/Mines;
-		 
 		 for(int i = 0; i<rnMine.length; i++) {	//지뢰 랜덤으로 배치
 			 int ran=rnd.nextInt(Mines*Mines);
 			 rnMine[i]=ran;
 			 for(int j=0; j<i; j++) {
-				 if(rnMine[i]==rnMine[j]) {
+				 if(rnMine[i]==SaveFClick) {
+					 System.out.println("--"+rnMine[i]);
+					 System.out.println("--"+SaveFClick);
+					 i--;
+					 break;
+				 } 
+				 else if(rnMine[i]==rnMine[j]) {
 					 i--;
 					 break;
 				 }
@@ -79,6 +95,7 @@ public class Minesweeper implements ActionListener {
 		 
 		 for(int i=0; i<rnMine.length; i++) {	//지뢰칸을 Mine 배열에 1로 설정
 			 Mine[rnMine[i]]=1;
+			 System.out.println(rnMine[i]);
 		 }
 		 
 		 for(int i=0; i<MineCount.length; i++) {	//주변 마인 개수 표시. for문으로 변경가능
@@ -119,7 +136,7 @@ public class Minesweeper implements ActionListener {
 		ffrm.setResizable(false);
 		ffrm.setVisible(true);
 		
-		ffrm.add(flabel = new JLabel(new ImageIcon("images/harukkaka2.gif")));
+		ffrm.add(flabel = new JLabel(new ImageIcon("images/haru.gif")));
 		flabel.setSize(640,360);
 	}
 	
@@ -132,6 +149,13 @@ public class Minesweeper implements ActionListener {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < Mines*Mines; i++) {
 			if (e.getSource().equals(btn[i])) {
+				if(FirstClick==1) {
+					SaveFClick=i;
+					MineSet();
+					Createlabel();
+					FirstClick=0;
+					System.out.println(SaveFClick+"첫번째 클릭");
+				}
 				if(Mine[i]==1) {
 					frm.dispose();
 				}
