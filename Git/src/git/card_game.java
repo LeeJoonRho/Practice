@@ -18,26 +18,27 @@ public class card_game extends JFrame implements ActionListener {
 
 	Random rnd = new Random();
 
-	static int btn_del = 0, btn_dele = 0;// »èÁ¦ÇÒ ¹öÆ°ÀÇ ¹øÈ£ÀÇ º¯¼ö
+	static int btn_del = 0, btn_dele = 0;// ì‚­ì œí•  ë²„íŠ¼ì˜ ë²ˆí˜¸ì˜ ë³€ìˆ˜
 	static int i = 0, num[] = new int[16];
-	static int fc, sc, click_count = 0, cor_count;// Ã¹¹øÂ° Å¬¸¯, µÎ¹øÂ° Å¬¸¯, Å¬¸¯ È½¼ö, Á¤´ä
+	static int fc, sc, click_count = 0, cor_count;// ì²«ë²ˆì§¸ í´ë¦­, ë‘ë²ˆì§¸ í´ë¦­, í´ë¦­ íšŸìˆ˜, ì •ë‹µ
 	static JFrame frm = new JFrame();
 	static JButton btn[] = new JButton[16];
 	static JLabel image_label[] = new JLabel[16];
 
-	static int click_stop = 0; // Å¬¸¯ ÇßÀ» ½Ã ´Ù¸¥ ¹öÆ°ÀÌ Å¬¸¯ÀÌ ¾ÈµÇ°Ô ÇÔ
-	static int sec_time = 0; // 1ÃÊ ´ÜÀ§
-	static int dec_time = 0; // 0.1ÃÊ ´ÜÀ§
-	static int stop_time; // ¹öÆ°ÀÌ³ª ÀÌ¹ÌÁö¸¦ 1ÃÊÈÄ¿¡ »ç¶óÁö°Ô ÇÒ º¯¼ö
-	static int timer_stop; // Å¸ÀÌ¸Ó¸¦ Á¾·áÇÒ º¯¼ö
+	static int click_stop = 0; // í´ë¦­ í–ˆì„ ì‹œ ë‹¤ë¥¸ ë²„íŠ¼ì´ í´ë¦­ì´ ì•ˆë˜ê²Œ í•¨
+	static int sec_time = 0; // 1ì´ˆ ë‹¨ìœ„
+	static int dec_time = 0; // 0.1ì´ˆ ë‹¨ìœ„
+	static int stop_time=-100; // ë²„íŠ¼ì´ë‚˜ ì´ë¯¸ì§€ë¥¼ 1ì´ˆí›„ì— ì‚¬ë¼ì§€ê²Œ í•  ë³€ìˆ˜
+	static int timer_stop; // íƒ€ì´ë¨¸ë¥¼ ì¢…ë£Œí•  ë³€ìˆ˜
 
 	static Timer timer = new Timer();
 
 	public card_game() {
-		frm.setBounds(600, 150, 812, 838); // ÇÁ·¹ÀÓ À§Ä¡, Å©±â ¼³Á¤
+		frm.setBounds(600, 150, 812, 838); // í”„ë ˆì„ ìœ„ì¹˜, í¬ê¸° ì„¤ì •
 		frm.setLayout(null);
+		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		for (i = 0; i < 16; i++) // Áßº¹ °Ë»ç
+		for (i = 0; i < 16; i++) // ì¤‘ë³µ ê²€ì‚¬
 		{
 			num[i] = rnd.nextInt(16);
 			if (i > 0) {
@@ -51,9 +52,9 @@ public class card_game extends JFrame implements ActionListener {
 		}
 
 		for (i = 0; i < 16; i++) {
-			frm.add(btn[i] = new JButton("1")); // ÇÁ·¹ÀÓ¾È¿¡ ¹öÆ°À» ³ÖÀ½
+			frm.add(btn[i] = new JButton("")); // í”„ë ˆì„ì•ˆì— ë²„íŠ¼ì„ ë„£ìŒ
 
-			btn[i].addActionListener(this); // ¹öÆ°¿¡ ÀÌº¥Æ®¸¦ »ç¿ëÇÏ°Ú´Ù
+			btn[i].addActionListener(this); // ë²„íŠ¼ì— ì´ë²¤íŠ¸ë¥¼ ì‚¬ìš©í•˜ê² ë‹¤
 			btn[i].setSize(200, 200);
 			if (i < 4)
 				btn[i].setLocation(0 + 200 * (i), 0);
@@ -96,22 +97,23 @@ public class card_game extends JFrame implements ActionListener {
 			image_label[i].setVisible(false);
 		}
 
-		frm.setVisible(true); // ÇÁ·¹ÀÓÀ» º¼¼ö ÀÖ°Ô ¼³Á¤
+		frm.setVisible(true); // í”„ë ˆì„ì„ ë³¼ìˆ˜ ìˆê²Œ ì„¤ì •
 	}
 
 	public static void finish() {
-		JDialog dia = new JDialog(frm, "°ÔÀÓÁ¾·á");
-		dia.setBounds(700, 400, 300, 200);
-		dia.setVisible(true);
+		JFrame ffrm = new JFrame("ê²Œì„ì¢…ë£Œ");
+		ffrm.setBounds(700, 400, 300, 200);
+		ffrm.setVisible(true);
+		ffrm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JLabel finish = new JLabel("ÀüºÎ ¸ÂÃß¼Ì½À´Ï´Ù. ÃàÇÏÇÕ´Ï´Ù!", JLabel.CENTER);
+		JLabel finish = new JLabel(sec_time+"ì´ˆ ê±¸ë ¸ìŠµë‹ˆë‹¤.", JLabel.CENTER);
 
-		dia.add(finish);
+		ffrm.add(finish);
 	}
 
 	public static void main(String[] args) {
 
-		timer.schedule(new WorkTask(), 0, 100); // Å¸ÀÌ¸Ó. 0.1ÃÊ¸¶´Ù ½ÇÇàµÊ
+		timer.schedule(new WorkTask(), 0, 100); // íƒ€ì´ë¨¸. 0.1ì´ˆë§ˆë‹¤ ì‹¤í–‰ë¨
 
 		new card_game();
 	}
@@ -122,27 +124,26 @@ public class card_game extends JFrame implements ActionListener {
 			dec_time++;
 			if (dec_time % 10 == 0) {
 				sec_time++;
-				System.out.println(sec_time+"ÃÊ");
 			}
 
-			if (stop_time + 10 == dec_time) // ¹öÆ° Å¬¸¯ ÈÄ 1ÃÊ°¡ Áö³ª¸é ¹öÆ°À» º¸¿©ÁÖ°í ÀÌ¹ÌÁö¸¦ »ç¶óÁö°ÔÇÔ
+			if (stop_time + 10 == dec_time) // ë²„íŠ¼ í´ë¦­ í›„ 1ì´ˆê°€ ì§€ë‚˜ë©´ ë²„íŠ¼ì„ ë³´ì—¬ì£¼ê³  ì´ë¯¸ì§€ë¥¼ ì‚¬ë¼ì§€ê²Œí•¨
 			{
-				btn[btn_del].setVisible(true); // ¹öÆ°À» ´Ù½Ã º¸¿©ÁÜ
-				image_label[btn_del].setVisible(false); // ÀÌ¹ÌÁö¸¦ ´Ù½Ã »ç¶óÁö°ÔÇÔ
+				btn[btn_del].setVisible(true); // ë²„íŠ¼ì„ ë‹¤ì‹œ ë³´ì—¬ì¤Œ
+				image_label[btn_del].setVisible(false); // ì´ë¯¸ì§€ë¥¼ ë‹¤ì‹œ ì‚¬ë¼ì§€ê²Œí•¨
 				btn[btn_dele].setVisible(true);
 				image_label[btn_dele].setVisible(false);
 				click_stop = 0;
 			}
 			
 			if (timer_stop == 1)
-				timer.cancel(); // Å¸ÀÌ¸Ó Á¤Áö
+				timer.cancel(); // íƒ€ì´ë¨¸ ì •ì§€
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (click_stop != 1) // ¸ÕÀú ´Ù¸¥ ¹öÆ°À» Å¬¸¯ ÇßÀ» ½Ã ½ÇÇàµÇÁö ¾Ê°ÔÇÔ
+		if (click_stop != 1) // ë¨¼ì € ë‹¤ë¥¸ ë²„íŠ¼ì„ í´ë¦­ í–ˆì„ ì‹œ ì‹¤í–‰ë˜ì§€ ì•Šê²Œí•¨
 		{
 			for (i = 0; i < 16; i++) {
 				if (e.getSource().equals(btn[i])) {
@@ -152,16 +153,16 @@ public class card_game extends JFrame implements ActionListener {
 						fc = num[i];
 						click_count++;
 
-						btn[btn_del].setVisible(false); // ¹öÆ°À» º¸ÀÌÁö ¾Ê°ÔÇÔ
-						image_label[btn_del].setVisible(true); // ÀÌ¹ÌÁö¸¦ º¸ÀÌ°Ô ÇÔ
-					} else if (click_count == 1) // count¸¦ ÀÌ¿ëÇÏ¿© µÎ¹øÂ° Å¬¸¯À» ±¸ºĞ
+						btn[btn_del].setVisible(false); // ë²„íŠ¼ì„ ë³´ì´ì§€ ì•Šê²Œí•¨
+						image_label[btn_del].setVisible(true); // ì´ë¯¸ì§€ë¥¼ ë³´ì´ê²Œ í•¨
+					} else if (click_count == 1) // countë¥¼ ì´ìš©í•˜ì—¬ ë‘ë²ˆì§¸ í´ë¦­ì„ êµ¬ë¶„
 					{
 						btn_dele = i;
 						sc = num[i];
 						click_count--;
 
-						btn[btn_dele].setVisible(false); // ¹öÆ°À» º¸ÀÌÁö ¾Ê°ÔÇÔ
-						image_label[btn_dele].setVisible(true); // ÀÌ¹ÌÁö¸¦ º¸ÀÌ°Ô ÇÔ
+						btn[btn_dele].setVisible(false); // ë²„íŠ¼ì„ ë³´ì´ì§€ ì•Šê²Œí•¨
+						image_label[btn_dele].setVisible(true); // ì´ë¯¸ì§€ë¥¼ ë³´ì´ê²Œ í•¨
 
 						if (fc + sc == 15) {
 							cor_count++;
@@ -171,11 +172,11 @@ public class card_game extends JFrame implements ActionListener {
 
 							/*
 							 * try { Thread.sleep(500); } catch
-							 * (InterruptedException e1) ¹öÆ° Å¬¸¯½Ã 1ÃÊ Áö¿¬. ¹Ì±¸Çö {
+							 * (InterruptedException e1) ë²„íŠ¼ í´ë¦­ì‹œ 1ì´ˆ ì§€ì—°. ë¯¸êµ¬í˜„ {
 							 * e1.printStackTrace(); }
 							 */
 							click_stop = 1;
-							stop_time = dec_time;	//1ÃÊµ¿¾È ¹öÆ°ÀÌ º¸ÀÌ°Ô ÇöÀç ½Ã°£(0.1ÃÊ ´ÜÀ§)¸¦ ³ÖÀ½
+							stop_time = dec_time;	//1ì´ˆë™ì•ˆ ë²„íŠ¼ì´ ë³´ì´ê²Œ í˜„ì¬ ì‹œê°„(0.1ì´ˆ ë‹¨ìœ„)ë¥¼ ë„£ìŒ
 						}
 					}
 				}
@@ -183,7 +184,7 @@ public class card_game extends JFrame implements ActionListener {
 		}
 		if (cor_count == 8) {
 			frm.setVisible(false);
-			timer_stop = 1; // Å¸ÀÌ¸Ó Á¤Áö º¯¼ö¸¦ 1·Î ¸¸µë
+			timer_stop = 1; // íƒ€ì´ë¨¸ ì •ì§€ ë³€ìˆ˜ë¥¼ 1ë¡œ ë§Œë“¬
 			finish();
 		}
 	}
